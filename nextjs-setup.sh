@@ -22,7 +22,7 @@ touch tsconfig.json
 yarn add --dev typescript @types/react @types/node
 mv pages/_app.js pages/_app.tsx
 mv pages/index.js pages/index.tsx
-mv pages/api/hellow.js pages/api/hello.tsx
+mv pages/api/hello.js pages/api/hello.tsx
 
 yarn add tailwindcss postcss autoprefixer
 
@@ -57,10 +57,14 @@ mv ../tailwind.config.js .tailwind.config.js
 
 yarn add --dev eslint prettier eslint-plugin-react eslint-config-prettier eslint-plugin-prettier @typescript-eslint/parser @typescript-eslint/eslint-plugin
 
+touch .eslintrc.json
 mv ../eslintrc.json .eslintrc.json
+touch .eslintignore
 mv ../eslintignore .eslintignore
 
+touch .prettierrc.json
 mv ../prettierrc.json .prettierrc.json
+touch .prettierignore
 mv ../prettierignore .prettierignore
 
 mkdir .vscode
