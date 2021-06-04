@@ -45,7 +45,7 @@ sed -i '' 's/\.\.\/stories\/\*\*\/\*\.stories\.mdx/\.\.\/components\/\*\*\/\*\.s
 
 sed -i '' 's/\.\.\/stories\/\*\*\/\*\.stories\.@(js|jsx|ts|tsx)/\.\.\/components\/\*\*\/\*\.stories\.@(js|jsx|ts|tsx)/' .storybook/main.js
 
-sed -i '' "1s/^/import \"../styles/globals.css\"/" .storybook/preview.js
+sed -i '' "1s/^/import \"..\/styles\/globals.css\"\n/" .storybook/preview.js
 
 cp ./components/Button.stories.tsx Button.stories.tsx
 rm -rf components/
