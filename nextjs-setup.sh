@@ -58,14 +58,14 @@ mv ../tailwind.config.js .tailwind.config.js
 yarn add --dev eslint prettier eslint-plugin-react eslint-config-prettier eslint-plugin-prettier @typescript-eslint/parser @typescript-eslint/eslint-plugin
 
 touch .eslintrc.json
-mv ../eslintrc.json .eslintrc.json
+mv ../.eslintrc.json .eslintrc.json
 touch .eslintignore
-mv ../eslintignore .eslintignore
+mv ../.eslintignore .eslintignore
 
 touch .prettierrc.json
-mv ../prettierrc.json .prettierrc.json
+mv ../.prettierrc.json .prettierrc.json
 touch .prettierignore
-mv ../prettierignore .prettierignore
+mv ../.prettierignore .prettierignore
 
 mkdir .vscode
 mv ../settings.json ./.vscode/settings.json
