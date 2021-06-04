@@ -13,31 +13,74 @@ if [[ $FLAG_NAME != 1 ]]; then
   exit 1
 fi
 
-
 echo "${APP_NAME}"
-# npx create-next-app $APP_NAME
-touch $APP_NAME
-# cd $APP_NAME
+npx create-next-app $APP_NAME
+cd $APP_NAME
 # yarn dev
-# touch tsconfig.json
+touch tsconfig.json
 
-# yarn add --dev typescript @types/react @types/node
-# yarn add tailwindcss postcss autoprefixer
+yarn add --dev typescript @types/react @types/node
+mv pages/_app.js pages/_app.tsx
+mv pages/index.js pages/index.tsx
+mv pages/api/hellow.js pages/api/hello.tsx
 
-# npx tailwindcss init -p
-# npx sb init
+yarn add tailwindcss postcss autoprefixer
 
-# yarn remove tailwindcss postcss autoprefixer
-# yarn add tailwindcss@npm:@tailwindcss/postcss7-compat @tailwindcss/postcss7-compat postcss@^7 autoprefixer@^9
-# mv stories components
+npx tailwindcss init -p
 
 
-# yarn add --dev eslint prettier eslint-plugin-react eslint-config-prettier eslint-plugin-prettier @typescript-eslint/parser @typescript-eslint/eslint-plugin
+# tailwind.config.jsonのpurgeを置換
+sed -i '' "s/purge: \[\],/purge: \['\.\/pages\/\*\*\/\*\.tsx', '\.\/components\/\*\*\/\*\.tsx'\],/" tailwind.config.js
 
-# touch .eslintrc.json .eslintignore
+# global.cssに追記
+mv ../globals.css ./styles/globals.css
 
-# touch .prettierrc.json .prettierignore
+npx sb init
 
-# yarn add --dev husky lint-staged
+yarn remove tailwindcss postcss autoprefixer
+yarn add tailwindcss@npm:@tailwindcss/postcss7-compat @tailwindcss/postcss7-compat postcss@^7 autoprefixer@^9
+mv stories components
+
+sed -i '' 's/\.\.\/stories\/\*\*\/\*\.stories\.mdx/\.\.\/components\/\*\*\/\*\.stories\.mdx/' .storybook/main.js
+
+sed -i '' 's/\.\.\/stories\/\*\*\/\*\.stories\.@(js|jsx|ts|tsx)/\.\.\/components\/\*\*\/\*\.stories\.@(js|jsx|ts|tsx)/' .storybook/main.js
+
+sed -i '' "1s/^/import \"../styles/globals.css\"/" .storybook/preview.js
+
+cp ./components/Button.stories.tsx Button.stories.tsx
+rm -rf components/
+mkdir components
+mv ../Button.tsx ./components/Button.tsx
+mv Button.stories.tsx ./components/Button.stories.tsx
+
+mv ../tailwind.config.js .tailwind.config.js
+
+yarn add --dev eslint prettier eslint-plugin-react eslint-config-prettier eslint-plugin-prettier @typescript-eslint/parser @typescript-eslint/eslint-plugin
+
+mv ../eslintrc.json .eslintrc.json
+mv ../eslintignore .eslintignore
+
+mv ../prettierrc.json .prettierrc.json
+mv ../prettierignore .prettierignore
+
+mkdir .vscode
+mv ../settings.json ./.vscode/settings.json
+
+yarn add --dev husky lint-staged
+
+sed -i '' 's/"build-storybook": "build-storybook"/"build-storybook": "build-storybook",/' package.json
+
+LINE_NUMBER=`sed -n '/"build-storybook": "build-storybook",/=' package.json`
+
+LINE_NUMBER=`expr ${LINE_NUMBER} \+ 1`
+sed -i '' "${LINE_NUMBER}s/^/    \"lint\": \"eslint . --ext .ts,.js,.tsx,.jsx\",\n/" package.json
+LINE_NUMBER=`expr ${LINE_NUMBER} \+ 1`
+sed -i '' "${LINE_NUMBER}s/^/    \"lint:fix\": \"eslint --fix . --ext .ts,.js,.tsx,.jsx\",\n/" package.json
+LINE_NUMBER=`expr ${LINE_NUMBER} \+ 1`
+sed -i '' "${LINE_NUMBER}s/^/    \"format\": \"prettier --write .\"\n/" package.json
+LINE_NUMBER=`expr ${LINE_NUMBER} \+ 2`
+sed -i '' "${LINE_NUMBER}s/^/  \"husky\": {\n    \"hooks\": {\n      \"pre-commit\": \"lint-staged\"\n    }\n  },\n/" package.json
+LINE_NUMBER=`expr ${LINE_NUMBER} \+ 5`
+sed -i '' "${LINE_NUMBER}s/^/  \"lint-staged\": {\n    \"*.{js,jsx,ts,tsx}\": [\n      \"yarn lint\",\n      \"yarn format\"\n    ]\n  },\n/" package.json
 
 exit 1
