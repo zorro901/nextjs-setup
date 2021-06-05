@@ -72,7 +72,6 @@ mv ../settings.json ./.vscode/settings.json
 
 yarn add --dev husky lint-staged
 
-npx husky init
 npx husky install
 npx husky add .husky/pre-commit "yarn lint-staged"
 
