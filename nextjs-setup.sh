@@ -7,7 +7,6 @@ do
   esac
 done
 
-# オプションBが指定されている場合
 if [[ $FLAG_NAME != 1 ]]; then
   echo "APP_NAME is required!! 'sh nextjs-setup.sh -n APP_NAME'"
   exit 1
