@@ -72,6 +72,10 @@ mv ../settings.json ./.vscode/settings.json
 
 yarn add --dev husky lint-staged
 
+npx husky init
+npx husky install
+npx husky add .husky/pre-commit "yarn lint-staged"
+
 sed -i '' 's/"build-storybook": "build-storybook"/"build-storybook": "build-storybook",/' package.json
 
 LINE_NUMBER=`sed -n '/"build-storybook": "build-storybook",/=' package.json`
@@ -83,8 +87,10 @@ sed -i '' "${LINE_NUMBER}s/^/    \"lint:fix\": \"eslint --fix . --ext .ts,.js,.t
 LINE_NUMBER=`expr ${LINE_NUMBER} \+ 1`
 sed -i '' "${LINE_NUMBER}s/^/    \"format\": \"prettier --write .\"\n/" package.json
 LINE_NUMBER=`expr ${LINE_NUMBER} \+ 2`
-sed -i '' "${LINE_NUMBER}s/^/  \"husky\": {\n    \"hooks\": {\n      \"pre-commit\": \"lint-staged\"\n    }\n  },\n/" package.json
-LINE_NUMBER=`expr ${LINE_NUMBER} \+ 5`
 sed -i '' "${LINE_NUMBER}s/^/  \"lint-staged\": {\n    \"*.{js,jsx,ts,tsx}\": [\n      \"yarn lint\",\n      \"yarn format\"\n    ]\n  },\n/" package.json
+
+rm -rf ../.git
+git init
+code .
 
 exit 1
