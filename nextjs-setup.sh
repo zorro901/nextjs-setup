@@ -9,7 +9,7 @@ done
 
 # オプションBが指定されている場合
 if [[ $FLAG_NAME != 1 ]]; then
-  echo "APP_NAMEが指定されていません"
+  echo "APP_NAME is required!! 'sh nextjs-setup.sh -n APP_NAME'"
   exit 1
 fi
 
@@ -72,9 +72,6 @@ mv ../settings.json ./.vscode/settings.json
 
 yarn add --dev husky lint-staged
 
-npx husky install
-npx husky add .husky/pre-commit "yarn lint-staged"
-
 sed -i '' 's/"build-storybook": "build-storybook"/"build-storybook": "build-storybook",/' package.json
 
 LINE_NUMBER=`sed -n '/"build-storybook": "build-storybook",/=' package.json`
@@ -90,6 +87,11 @@ sed -i '' "${LINE_NUMBER}s/^/  \"lint-staged\": {\n    \"*.{js,jsx,ts,tsx}\": [\
 
 rm -rf ../.git
 git init
+
+npx husky init
+npx husky install
+npx husky add .husky/pre-commit "yarn lint-staged"
+
 code .
 
 exit 1
