@@ -53,7 +53,7 @@ mkdir components
 mv ../Button.tsx ./components/Button.tsx
 mv Button.stories.tsx ./components/Button.stories.tsx
 
-mv ../tailwind.config.js .tailwind.config.js
+mv ../tailwind.config.js tailwind.config.js
 
 yarn add --dev eslint prettier eslint-plugin-react eslint-config-prettier eslint-plugin-prettier @typescript-eslint/parser @typescript-eslint/eslint-plugin
 
