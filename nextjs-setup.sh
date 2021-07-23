@@ -28,21 +28,6 @@ npx tailwindcss init -p
 sed -i '' "s/purge: \[\],/purge: \['\.\/pages\/\*\*\/\*\.tsx', '\.\/components\/\*\*\/\*\.tsx'\],/" tailwind.config.js
 mv ../globals.css ./styles/globals.css
 
-npx sb init
-yarn remove tailwindcss postcss autoprefixer
-yarn add tailwindcss@npm:@tailwindcss/postcss7-compat @tailwindcss/postcss7-compat postcss@^7 autoprefixer@^9
-mv stories components
-
-sed -i '' 's/\.\.\/stories\/\*\*\/\*\.stories\.mdx/\.\.\/components\/\*\*\/\*\.stories\.mdx/' .storybook/main.js
-sed -i '' 's/\.\.\/stories\/\*\*\/\*\.stories\.@(js|jsx|ts|tsx)/\.\.\/components\/\*\*\/\*\.stories\.@(js|jsx|ts|tsx)/' .storybook/main.js
-sed -i '' "1s/^/import \"..\/styles\/globals.css\"\n/" .storybook/preview.js
-
-cp ./components/Button.stories.tsx Button.stories.tsx
-rm -rf components/
-mkdir components
-mv ../Button.tsx ./components/Button.tsx
-mv Button.stories.tsx ./components/Button.stories.tsx
-
 mv ../tailwind.config.js tailwind.config.js
 
 # prettier and eslint
@@ -62,9 +47,12 @@ mv ../settings.json ./.vscode/settings.json
 # install husky and lint-staged
 yarn add --dev husky lint-staged
 
-# adding script in package.json
-sed -i '' 's/"build-storybook": "build-storybook"/"build-storybook": "build-storybook",/' package.json
-LINE_NUMBER=`sed -n '/"build-storybook": "build-storybook",/=' package.json`
+# # adding script in package.json
+
+LINE_NUMBER=`sed -n '/"lint": "next lint"/=' package.json`
+sed -e "${LINE_NUMBER}d" package.json > package_tmp.json
+mv package_tmp.json package.json
+LINE_NUMBER=`sed -n '/"start": "next start",/=' package.json`
 LINE_NUMBER=`expr ${LINE_NUMBER} \+ 1`
 sed -i '' "${LINE_NUMBER}s/^/    \"lint\": \"eslint . --ext .ts,.js,.tsx,.jsx\",\n/" package.json
 LINE_NUMBER=`expr ${LINE_NUMBER} \+ 1`
