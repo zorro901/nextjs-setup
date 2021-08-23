@@ -1,91 +1,83 @@
 #!/bin/sh
 
-while getopts "n:" OPT
+while getopts n: OPT
 do
   case $OPT in
-  n) FLAG_NAME=1; APP_NAME="$OPTARG" ;;
+  n) FLAG_NAME=1; APP_NAME="$OPTARG";;
   esac
 done
 
-if [[ $FLAG_NAME != 1 ]]; then
+if [ $FLAG_NAME != 1 ]; then
   echo "APP_NAME is required!! 'sh nextjs-setup.sh -n APP_NAME'"
   exit 1
 fi
 
-echo "${APP_NAME}"
-npx create-next-app $APP_NAME
+echo "project name is ${APP_NAME}"
+npx create-next-app --ts $APP_NAME --use-npm
 cd $APP_NAME
 
 touch tsconfig.json
 
-yarn add --dev typescript @types/react @types/node
-mv pages/_app.js pages/_app.tsx
-mv pages/index.js pages/index.tsx
-mv pages/api/hello.js pages/api/hello.tsx
+npm i --save-dev typescript @types/react @types/node
 
-yarn add tailwindcss postcss autoprefixer
+npm i tailwindcss postcss autoprefixer
 npx tailwindcss init -p
-sed -i '' "s/purge: \[\],/purge: \['\.\/pages\/\*\*\/\*\.tsx', '\.\/components\/\*\*\/\*\.tsx'\],/" tailwind.config.js
-mv ../globals.css ./styles/globals.css
+sed -i -e "s/purge: \[\],/purge: \['\.\/pages\/\*\*\/\*\.tsx', '\.\/components\/\*\*\/\*\.tsx'\],/g" tailwind.config.js
+cp ../globals.css ./styles/globals.css
 
 npx sb init
-yarn remove tailwindcss postcss autoprefixer
-yarn add tailwindcss@npm:@tailwindcss/postcss7-compat @tailwindcss/postcss7-compat postcss@^7 autoprefixer@^9
+npm r tailwindcss postcss autoprefixer
+npm i tailwindcss@npm:@tailwindcss/postcss7-compat @tailwindcss/postcss7-compat postcss@^7 autoprefixer@^9
 mv stories components
 
-sed -i '' 's/\.\.\/stories\/\*\*\/\*\.stories\.mdx/\.\.\/components\/\*\*\/\*\.stories\.mdx/' .storybook/main.js
-sed -i '' 's/\.\.\/stories\/\*\*\/\*\.stories\.@(js|jsx|ts|tsx)/\.\.\/components\/\*\*\/\*\.stories\.@(js|jsx|ts|tsx)/' .storybook/main.js
-sed -i '' "1s/^/import \"..\/styles\/globals.css\"\n/" .storybook/preview.js
+sed -i -e "s/\.\.\/stories\/\*\*\/\*\.stories\.mdx/\.\.\/components\/\*\*\/\*\.stories\.mdx/" .storybook/main.js
+sed -i -e "s/\.\.\/stories\/\*\*\/\*\.stories\.@(js|jsx|ts|tsx)/\.\.\/components\/\*\*\/\*\.stories\.@(js|jsx|ts|tsx)/" .storybook/main.js
+sed -i -e "1s/^/import \'..\/styles\/globals.css\'\n/" .storybook/preview.js
 
 cp ./components/Button.stories.tsx Button.stories.tsx
 rm -rf components/
 mkdir components
-mv ../Button.tsx ./components/Button.tsx
+cp ../Button.tsx ./components/Button.tsx
 mv Button.stories.tsx ./components/Button.stories.tsx
 
-mv ../tailwind.config.js tailwind.config.js
+cp ../tailwind.config.js tailwind.config.js
 
 # prettier and eslint
-yarn add --dev eslint prettier eslint-plugin-react eslint-config-prettier eslint-plugin-prettier @typescript-eslint/parser @typescript-eslint/eslint-plugin
-touch .eslintrc.json
-mv ../.eslintrc.json .eslintrc.json
-touch .eslintignore
-mv ../.eslintignore .eslintignore
-touch .prettierrc.json
-mv ../.prettierrc.json .prettierrc.json
-touch .prettierignore
-mv ../.prettierignore .prettierignore
-
-mkdir .vscode
-mv ../settings.json ./.vscode/settings.json
+npm i --save-dev eslint prettier eslint-plugin-react eslint-config-prettier eslint-plugin-prettier @typescript-eslint/parser @typescript-eslint/eslint-plugin
+cp ../.eslintrc.json .eslintrc.json
+cp ../.eslintignore .eslintignore
+cp ../.prettierrc.json .prettierrc.json
+cp ../.prettierignore .prettierignore
 
 # install husky and lint-staged
-yarn add --dev husky lint-staged
+npm i --save-dev husky lint-staged
 
 # adding script in package.json
-sed -i '' 's/"build-storybook": "build-storybook"/"build-storybook": "build-storybook",/' package.json
+sed -i -e '/"lint": "next lint",/d' package.json
+sed -i -e 's/"build-storybook": "build-storybook"/"build-storybook": "build-storybook",/' package.json
 LINE_NUMBER=`sed -n '/"build-storybook": "build-storybook",/=' package.json`
 LINE_NUMBER=`expr ${LINE_NUMBER} \+ 1`
-sed -i '' "${LINE_NUMBER}s/^/    \"lint\": \"eslint . --ext .ts,.js,.tsx,.jsx\",\n/" package.json
+sed -i -e "${LINE_NUMBER}s/^/    \"lint\": \"eslint . --ext .ts,.js,.tsx,.jsx\",\n/" package.json
 LINE_NUMBER=`expr ${LINE_NUMBER} \+ 1`
-sed -i '' "${LINE_NUMBER}s/^/    \"lint:fix\": \"eslint --fix . --ext .ts,.js,.tsx,.jsx\",\n/" package.json
+sed -i -e "${LINE_NUMBER}s/^/    \"lint:fix\": \"eslint --fix . --ext .ts,.js,.tsx,.jsx\",\n/" package.json
 LINE_NUMBER=`expr ${LINE_NUMBER} \+ 1`
-sed -i '' "${LINE_NUMBER}s/^/    \"format\": \"prettier --write .\"\n/" package.json
+sed -i -e "${LINE_NUMBER}s/^/    \"format\": \"prettier --write .\"\n/" package.json
 LINE_NUMBER=`expr ${LINE_NUMBER} \+ 2`
-sed -i '' "${LINE_NUMBER}s/^/  \"lint-staged\": {\n    \"*.{js,jsx,ts,tsx}\": [\n      \"yarn lint\",\n      \"yarn format\"\n    ]\n  },\n/" package.json
+sed -i -e "${LINE_NUMBER}s/^/  \"lint-staged\": {\n    \"*.{js,jsx,ts,tsx}\": [\n      \"npm run lint\",\n      \"npm run format\"\n    ]\n  },\n/" package.json
 
 # remove .git/ of nextjs-setup.sh
 rm -rf ../.git
 
 # init git of project
-git init
+git init -y
 
 # setting up of husky
-npx husky init
-npx husky install
-npx husky add .husky/pre-commit "yarn lint-staged"
+npx husky-init && npm install
+npx husky add .husky/pre-commit "npm run lint:fix"
 
 # start vscode
-code .
+#mkdir .vscode
+#mv ../settings.json ./.vscode/settings.json
+#code .
 
 exit 1

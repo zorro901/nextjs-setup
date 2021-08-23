@@ -19,7 +19,9 @@
     "node": true,
     "es6": true
   },
+  "root": true,
   "rules": {
+    "@typescript-eslint/explicit-module-boundary-types": "off",
     "prettier/prettier": [2, { "singleQuote": true, "semi": false }],
     "react/react-in-jsx-scope": 0,
     "react/display-name": 0,
