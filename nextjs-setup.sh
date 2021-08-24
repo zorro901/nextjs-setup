@@ -13,8 +13,8 @@ if [ $FLAG_NAME != 1 ]; then
 fi
 
 echo "project name is ${APP_NAME}"
-npx create-next-app --ts $APP_NAME --use-npm
-cd $APP_NAME
+npx create-next-app --ts "$APP_NAME" --use-npm
+cd "$APP_NAME" || exit
 
 touch tsconfig.json
 
@@ -55,21 +55,21 @@ npm i --save-dev husky lint-staged
 # adding script in package.json
 sed -i -e '/"lint": "next lint",/d' package.json
 sed -i -e 's/"build-storybook": "build-storybook"/"build-storybook": "build-storybook",/' package.json
-LINE_NUMBER=`sed -n '/"build-storybook": "build-storybook",/=' package.json`
-LINE_NUMBER=`expr ${LINE_NUMBER} \+ 1`
+LINE_NUMBER="$(sed -n '/"build-storybook": "build-storybook",/=' package.json)"
+LINE_NUMBER="$(expr ${LINE_NUMBER} \+ 1)"
 sed -i -e "${LINE_NUMBER}s/^/    \"lint\": \"eslint . --ext .ts,.js,.tsx,.jsx\",\n/" package.json
-LINE_NUMBER=`expr ${LINE_NUMBER} \+ 1`
+LINE_NUMBER="$(expr ${LINE_NUMBER} \+ 1)"
 sed -i -e "${LINE_NUMBER}s/^/    \"lint:fix\": \"eslint --fix . --ext .ts,.js,.tsx,.jsx\",\n/" package.json
-LINE_NUMBER=`expr ${LINE_NUMBER} \+ 1`
+LINE_NUMBER="$(expr ${LINE_NUMBER} \+ 1)"
 sed -i -e "${LINE_NUMBER}s/^/    \"format\": \"prettier --write .\"\n/" package.json
-LINE_NUMBER=`expr ${LINE_NUMBER} \+ 2`
+LINE_NUMBER="$(expr ${LINE_NUMBER} \+ 2)"
 sed -i -e "${LINE_NUMBER}s/^/  \"lint-staged\": {\n    \"*.{js,jsx,ts,tsx}\": [\n      \"npm run lint\",\n      \"npm run format\"\n    ]\n  },\n/" package.json
 
 # remove .git/ of nextjs-setup.sh
-rm -rf ../.git
+#rm -rf ../.git
 
 # init git of project
-git init -y
+git init
 
 # setting up of husky
 npx husky-init && npm install
