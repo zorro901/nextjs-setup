@@ -3,7 +3,9 @@
 while getopts n: OPT
 do
   case $OPT in
-  n) FLAG_NAME=1; APP_NAME="$OPTARG";;
+    n) FLAG_NAME=1; APP_NAME="$OPTARG";;
+    *) echo "usage: $0 [-n]" >&2
+    exit 1 ;;
   esac
 done
 
