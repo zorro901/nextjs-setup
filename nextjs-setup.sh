@@ -60,13 +60,13 @@ npm i --save-dev husky lint-staged
 sed -i -e '/"lint": "next lint",/d' package.json
 sed -i -e 's/"build-storybook": "build-storybook"/"build-storybook": "build-storybook",/' package.json
 LINE_NUMBER="$(sed -n '/"build-storybook": "build-storybook",/=' package.json)"
-LINE_NUMBER="$(expr ${LINE_NUMBER} \+ 1)"
+LINE_NUMBER=$((LINE_NUMBER + 1))
 sed -i -e "${LINE_NUMBER}s/^/    \"lint\": \"eslint . --ext .ts,.js,.tsx,.jsx\",\n/" package.json
-LINE_NUMBER="$(expr ${LINE_NUMBER} \+ 1)"
+LINE_NUMBER=$((LINE_NUMBER + 1))
 sed -i -e "${LINE_NUMBER}s/^/    \"lint:fix\": \"eslint --fix . --ext .ts,.js,.tsx,.jsx\",\n/" package.json
-LINE_NUMBER="$(expr ${LINE_NUMBER} \+ 1)"
+LINE_NUMBER=$((LINE_NUMBER + 1))
 sed -i -e "${LINE_NUMBER}s/^/    \"format\": \"prettier --write .\"\n/" package.json
-LINE_NUMBER="$(expr ${LINE_NUMBER} \+ 2)"
+LINE_NUMBER=$((LINE_NUMBER + 2)
 sed -i -e "${LINE_NUMBER}s/^/  \"lint-staged\": {\n    \"*.{js,jsx,ts,tsx}\": [\n      \"npm run lint\",\n      \"npm run format\"\n    ]\n  },\n/" package.json
 
 # remove .git/ of nextjs-setup.sh
@@ -83,5 +83,3 @@ npx husky add .husky/pre-commit "npm run lint:fix"
 #mkdir .vscode
 #mv ../settings.json ./.vscode/settings.json
 #code .
-
-exit 1
