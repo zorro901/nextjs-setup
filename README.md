@@ -1,4 +1,4 @@
-# nextjs-setup
+# Setup Next.js
 This shell script automates the setup of Next.js + TypeScript + Tailwind + Storybook + eslint + prettier + husky project.
 detail: 
 
@@ -6,5 +6,10 @@ detail:
 ```
 git clone https://github.com/dl10yr/nextjs-setup.git project_dir
 cd project_dir
-sh nextjs-setup.sh -n APP_NAME
+sh setup-nextjs.sh -n APP_NAME
 ```
+
+# Directory
+
++ /SetupFile
++ /NewProject(created)

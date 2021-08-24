@@ -69,7 +69,7 @@ sed -i -e "${LINE_NUMBER}s/^/    \"format\": \"prettier --write .\"\n/" package.
 LINE_NUMBER=$((LINE_NUMBER + 2)
 sed -i -e "${LINE_NUMBER}s/^/  \"lint-staged\": {\n    \"*.{js,jsx,ts,tsx}\": [\n      \"npm run lint\",\n      \"npm run format\"\n    ]\n  },\n/" package.json
 
-# remove .git/ of nextjs-setup.sh
+# remove .git/ of setup-nextjs.sh
 #rm -rf ../.git
 
 # init git of project
