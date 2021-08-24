@@ -14,7 +14,9 @@ if [ $FLAG_NAME != 1 ]; then
   exit 1
 fi
 
+SCRIPT_DIR="$(basename "$(pwd)")"
 echo "project name is ${APP_NAME}"
+cd ..
 npx create-next-app --ts "$APP_NAME" --use-npm
 cd "$APP_NAME" || exit
 
@@ -25,7 +27,7 @@ npm i --save-dev typescript @types/react @types/node
 npm i tailwindcss postcss autoprefixer
 npx tailwindcss init -p
 sed -i -e "s/purge: \[\],/purge: \['\.\/pages\/\*\*\/\*\.tsx', '\.\/components\/\*\*\/\*\.tsx'\],/g" tailwind.config.js
-cp ../globals.css ./styles/globals.css
+cp ../"${SCRIPT_DIR}"/globals.css ./styles/globals.css
 
 npx sb init
 npm r tailwindcss postcss autoprefixer
@@ -39,17 +41,17 @@ sed -i -e "1s/^/import \'..\/styles\/globals.css\'\n/" .storybook/preview.js
 cp ./components/Button.stories.tsx Button.stories.tsx
 rm -rf components/
 mkdir components
-cp ../Button.tsx ./components/Button.tsx
+cp ../"${SCRIPT_DIR}"/Button.tsx ./components/Button.tsx
 mv Button.stories.tsx ./components/Button.stories.tsx
 
-cp ../tailwind.config.js tailwind.config.js
+cp ../"${SCRIPT_DIR}"/tailwind.config.js tailwind.config.js
 
 # prettier and eslint
 npm i --save-dev eslint prettier eslint-plugin-react eslint-config-prettier eslint-plugin-prettier @typescript-eslint/parser @typescript-eslint/eslint-plugin
-cp ../.eslintrc.json .eslintrc.json
-cp ../.eslintignore .eslintignore
-cp ../.prettierrc.json .prettierrc.json
-cp ../.prettierignore .prettierignore
+cp ../"${SCRIPT_DIR}"/.eslintrc.json .eslintrc.json
+cp ../"${SCRIPT_DIR}"/.eslintignore .eslintignore
+cp ../"${SCRIPT_DIR}"/.prettierrc.json .prettierrc.json
+cp ../"${SCRIPT_DIR}"/.prettierignore .prettierignore
 
 # install husky and lint-staged
 npm i --save-dev husky lint-staged
