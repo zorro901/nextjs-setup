@@ -22,7 +22,7 @@ cd "$APP_NAME" || exit
 
 touch tsconfig.json
 
-npm i --save-dev typescript @types/react @types/node
+npm i -D typescript @types/react @types/node
 
 npm i tailwindcss postcss autoprefixer
 npx tailwindcss init -p
@@ -30,8 +30,6 @@ sed -i -e "s/purge: \[\],/purge: \['\.\/pages\/\*\*\/\*\.tsx', '\.\/components\/
 cp ../"${SCRIPT_DIR}"/globals.css ./styles/globals.css
 
 npx sb init
-npm r tailwindcss postcss autoprefixer
-npm i tailwindcss@npm:@tailwindcss/postcss7-compat @tailwindcss/postcss7-compat postcss@^7 autoprefixer@^9
 mv stories components
 
 sed -i -e "s/\.\.\/stories\/\*\*\/\*\.stories\.mdx/\.\.\/components\/\*\*\/\*\.stories\.mdx/" .storybook/main.js
@@ -47,14 +45,14 @@ mv Button.stories.tsx ./components/Button.stories.tsx
 cp ../"${SCRIPT_DIR}"/tailwind.config.js tailwind.config.js
 
 # prettier and eslint
-npm i --save-dev eslint prettier eslint-plugin-react eslint-config-prettier eslint-plugin-prettier @typescript-eslint/parser @typescript-eslint/eslint-plugin
+npm i -D eslint prettier eslint-plugin-react eslint-config-prettier eslint-plugin-prettier @typescript-eslint/parser @typescript-eslint/eslint-plugin
 cp ../"${SCRIPT_DIR}"/.eslintrc.json .eslintrc.json
 cp ../"${SCRIPT_DIR}"/.eslintignore .eslintignore
 cp ../"${SCRIPT_DIR}"/.prettierrc.json .prettierrc.json
 cp ../"${SCRIPT_DIR}"/.prettierignore .prettierignore
 
 # install husky and lint-staged
-npm i --save-dev husky lint-staged
+npm i -D husky lint-staged
 
 # adding script in package.json
 sed -i -e '/"lint": "next lint",/d' package.json
